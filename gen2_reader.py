@@ -21,6 +21,10 @@ from string import strip
 import rfid
 
 
+#------------------
+#open("file","a")
+#appends to a existing file. This keeps what is in the "file" and continues to write new test into the file
+#------------------
 
 log_file = open("log_out.log", "a")
 
@@ -59,6 +63,16 @@ class top_block(grc_wxgui.top_block_gui):
         num_taps = int(64000 / ((
                                 dec_rate * 4) * 256 ))  #Filter matched to 1/4 of the 256 kHz tag cycle  #		num_taps = int(64000 / ( (dec_rate * 4) * 40 )) #Filter matched to 1/4 of the 40 kHz tag cycle
 
+        #---------------------------
+        #num_taps==3
+        #taps =[complex(1,1)] * num_taps = [(1+1j)]*3 = [(1+1j),(1+1j),(1+1j)]
+        #
+        #"complex" creates complex numbers
+        # complex(x,y) = x+yj (x are the real part of the number and y are the complex part of the number)
+        #
+        #[complex(x,y)]*size = size tells how many complex numbers will be created
+        #[complex(1,1)]*3 = [(1+1j),(1+1j),(1+1j)]
+        #---------------------------
         taps = [complex(1, 1)] * num_taps
 
         matched_filt = gr.fir_filter_ccc(sw_dec, taps);
@@ -131,6 +145,11 @@ def main():
     #    gr.enable_realtime_scheduling()
     tb = top_block()
 
+
+    #---------------------------------------------
+    #  tb.Run(True) runs an infinite loop.
+    #  To GET continue running the rest of the code, close the gui window
+    #---------------------------------------------
     tb.Run(True)
 
     log_file.write("T,CMD,ERROR,BITS,SNR\n")
